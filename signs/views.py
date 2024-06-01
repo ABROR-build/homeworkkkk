@@ -71,3 +71,51 @@ class SignsDeleteView(APIView):
             }
         finally:
             return Response(serializer_data)
+
+
+class SignsCreateView(APIView):
+    def post(self, request):
+        serializer = serializers.SignsSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'sign': serializer.data,
+                'status': 'success',
+                'status_code': status.HTTP_201_CREATED
+            })
+        else:
+            return Response({
+                'errors': serializer.errors,
+                'status': 'error',
+                'status_code': status.HTTP_400_BAD_REQUEST,
+            })
+
+
+class SignsPutView(APIView):
+    def put(self, request, pk):
+        serializer_data = {}  # Initialize to a default value
+        try:
+            signs = models.Signs.objects.get(pk=pk)
+            serializer = serializers.SignsSerializers(signs, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                serializer_data = {
+                    'sign': serializer.data,
+                    'status': 'success',
+                    'status_code': status.HTTP_200_OK
+                }
+            else:
+                serializer_data = {
+                    'errors': serializer.errors,
+                    'status': 'error',
+                    'status_code': status.HTTP_400_BAD_REQUEST,
+                }
+
+        except Exception as exp:
+            serializer_data = {
+                'Error': str(exp),
+                'status': 'ERROR',
+                'status code': status.HTTP_404_NOT_FOUND,
+            }
+        finally:
+            return Response(serializer_data)

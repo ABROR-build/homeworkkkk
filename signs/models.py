@@ -15,7 +15,7 @@ class Signs(models.Model):
     category = models.ForeignKey(Categories, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
     description = models.TextField()
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
     video = models.FileField(upload_to='videos/', blank=True, null=True)
     audio = models.FileField(upload_to='audios/', blank=True, null=True)
     docs = models.FileField(upload_to='docs/', blank=True, null=True)
